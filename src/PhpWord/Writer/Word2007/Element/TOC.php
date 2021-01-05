@@ -97,7 +97,22 @@ class TOC extends AbstractElement
             $styleWriter->write();
         }
         $xmlWriter->startElement('w:t');
-        $this->writeText($title->getText());
+
+	    if ($title->getText() instanceof \PhpOffice\PhpWord\Element\TextRun) {
+		    $text = '';
+
+		    foreach ($title->getText()->getElements() as $child) {
+			    if ($child instanceof \PhpOffice\PhpWord\Element\Text) {
+				    $text .= $child->getText();
+			    }
+		    }
+
+		    $this->writeText($text);
+	    }
+	    else {
+		    $this->writeText($title->getText());
+	    }
+
         $xmlWriter->endElement(); // w:t
         $xmlWriter->endElement(); // w:r
 

@@ -218,6 +218,10 @@ abstract class AbstractElement
      */
     protected function writeText($content)
     {
+	    if ($content instanceof \PhpOffice\PhpWord\Element\TextRun) {
+		    return '';
+	    }
+
         if (Settings::isOutputEscapingEnabled()) {
             return $this->getXmlWriter()->text($content);
         }

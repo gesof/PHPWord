@@ -536,24 +536,29 @@ class Html
                     $styles['bgColor'] = trim($cValue, '#');
                     break;
                 case 'line-height':
-                    $matches = array();
-                    if (preg_match('/([0-9]+\.?[0-9]*[a-z]+)/', $cValue, $matches)) {
-                        //matches number with a unit, e.g. 12px, 15pt, 20mm, ...
-                        $spacingLineRule = \PhpOffice\PhpWord\SimpleType\LineSpacingRule::EXACT;
-                        $spacing = Converter::cssToTwip($matches[1]);
-                    } elseif (preg_match('/([0-9]+)%/', $cValue, $matches)) {
-                        //matches percentages
-                        $spacingLineRule = \PhpOffice\PhpWord\SimpleType\LineSpacingRule::AUTO;
-                        //we are subtracting 1 line height because the Spacing writer is adding one line
-                        $spacing = ((((int) $matches[1]) / 100) * Paragraph::LINE_HEIGHT) - Paragraph::LINE_HEIGHT;
-                    } else {
-                        //any other, wich is a multiplier. E.g. 1.2
-                        $spacingLineRule = \PhpOffice\PhpWord\SimpleType\LineSpacingRule::AUTO;
-                        //we are subtracting 1 line height because the Spacing writer is adding one line
-                        $spacing = ($cValue * Paragraph::LINE_HEIGHT) - Paragraph::LINE_HEIGHT;
-                    }
-                    $styles['spacingLineRule'] = $spacingLineRule;
-                    $styles['line-spacing'] = $spacing;
+                	try {
+		                $matches = array();
+		                if (preg_match('/([0-9]+\.?[0-9]*[a-z]+)/', $cValue, $matches)) {
+			                //matches number with a unit, e.g. 12px, 15pt, 20mm, ...
+			                $spacingLineRule = \PhpOffice\PhpWord\SimpleType\LineSpacingRule::EXACT;
+			                $spacing = Converter::cssToTwip($matches[1]);
+		                } elseif (preg_match('/([0-9]+)%/', $cValue, $matches)) {
+			                //matches percentages
+			                $spacingLineRule = \PhpOffice\PhpWord\SimpleType\LineSpacingRule::AUTO;
+			                //we are subtracting 1 line height because the Spacing writer is adding one line
+			                $spacing = ((((int) $matches[1]) / 100) * Paragraph::LINE_HEIGHT) - Paragraph::LINE_HEIGHT;
+		                } else {
+			                //any other, wich is a multiplier. E.g. 1.2
+			                $spacingLineRule = \PhpOffice\PhpWord\SimpleType\LineSpacingRule::AUTO;
+			                //we are subtracting 1 line height because the Spacing writer is adding one line
+			                $spacing = ($cValue * Paragraph::LINE_HEIGHT) - Paragraph::LINE_HEIGHT;
+		                }
+		                $styles['spacingLineRule'] = $spacingLineRule;
+		                $styles['line-spacing'] = $spacing;
+	                }
+					catch (\Exception $e) {
+
+					}
                     break;
                 case 'letter-spacing':
                     $styles['letter-spacing'] = Converter::cssToTwip($cValue);
